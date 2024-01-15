@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /*
-* An Interval class is defined to represent the interval pairs. Each interval has a start
+* An Interval class to represent the interval pairs. Each interval has a start
 * and an end timestamp.
 * */
 @AllArgsConstructor

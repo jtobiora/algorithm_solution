@@ -51,31 +51,22 @@ public class AlgorithmSolutions {
     * (exclusive OR) operation is a bitwise operation that returns 1 for each bit where the operands have
     * different values and 0 when the operands have the same values
     * */
+
     public static int findMaximumXORSubArray (int[] arr) {
-        int maxXOR = Integer.MIN_VALUE; //to store the maximum XOR value found so far
-        int xorSoFar = 0; //to keep track of XOR accumulated up to the current index in the array.
+        int maxXOR = Integer.MIN_VALUE; // to store the max XOR value
 
-        HashSet<Integer> prefixes = new HashSet<>(); //to store XOR values encountered in the array up to the current index.
-        prefixes.add(0);
-
+        // Loop through to get subarrays and take starting points
         for (int i = 0; i < arr.length; i++) {
-            xorSoFar ^= arr[i];
 
-            int maxXORWithCurrent = Integer.MIN_VALUE;
+            // to store XOR of current subarray
             int currentXOR = 0;
 
-            for (int prefix : prefixes) {
-                int candidate = xorSoFar ^ prefix;
-                if (candidate > maxXORWithCurrent) {
-                    maxXORWithCurrent = candidate;
-                    currentXOR = prefix;
-                }
+            // Pick ending points of subarrays starting with i
+            for (int j = i; j < arr.length; j++) {
+                currentXOR = currentXOR ^ arr[j];
+                maxXOR = Math.max(maxXOR, currentXOR);
             }
-
-            maxXOR = Math.max(maxXOR, maxXORWithCurrent);
-            prefixes.add(xorSoFar);
         }
-
         return maxXOR;
     }
 }
