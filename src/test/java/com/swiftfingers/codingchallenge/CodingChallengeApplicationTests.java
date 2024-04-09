@@ -7,7 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 class CodingChallengeApplicationTests {
 
 	@Test
-	void contextLoads() {
+	void contextLoads() { 
+		//test goes in here
 	}
 
 }
