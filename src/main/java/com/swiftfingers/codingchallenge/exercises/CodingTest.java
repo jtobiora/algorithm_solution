@@ -81,6 +81,16 @@ public class CodingTest {
         else
             System.out.println("The sum was not found!");
 
+//        int firstIndex = -1;
+//        int secondIndex = -1;
+//        for (int x =0; x < nums.length; x++) {
+//            int sum = nums[x] + nums[x - 1];
+//            if (sum == target) {
+//                firstIndex = x;
+//                secondIndex = x - 1;
+//            }
+//        }
+
     }
 
     //verify if a string has repeating character

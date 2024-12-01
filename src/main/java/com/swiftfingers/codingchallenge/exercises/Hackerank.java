@@ -2,12 +2,15 @@ package com.swiftfingers.codingchallenge.exercises;
 
 
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+@Slf4j
 public class Hackerank {
 
     public static void main(String[] args) {
@@ -41,6 +44,10 @@ public class Hackerank {
         superDigit("9875", 4);
         counterGame(6);
         rotateLeft(Arrays.asList(1,2,3,4,5), 2);
+        sherlockAndAnagrams("abba");
+        maximumToys(Arrays.asList(1, 12, 5, 111, 200, 1000, 10), 50);
+        minimumLoss(Arrays.asList(20, 15, 8, 2, 12));
+        commonChild("HARRY", "SALLY");
     }
 
     /**
@@ -689,6 +696,133 @@ public class Hackerank {
         result.addAll(listPart1);
         result.addAll(listPart2);
         return result;
+    }
+
+    //https://www.hackerrank.com/challenges/two-strings/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D=dictionaries-hashmaps
+    //Given two strings, determine if they share a common substring. A substring may be as small as one character.
+    public static String commonSubstring(String s1, String s2) {
+        Set<Character> set1 = new HashSet<>();
+        Set<Character> set2 = new HashSet<>();
+
+        for (char c : s1.toCharArray()) {
+            set1.add(c);
+        }
+
+        for (char c : s2.toCharArray()) {
+            set2.add(c);
+        }
+
+        // Check if there is any intersection (common character) between the two sets
+        //retainAll() modifies the calling collection (set1) by removing all elements that are not present in the specified collection.
+        set1.retainAll(set2);
+
+        return set1.isEmpty() ? "NO" : "YES";
+    }
+
+    //https://www.hackerrank.com/challenges/sherlock-and-anagrams/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D=dictionaries-hashmaps
+    //Two strings are anagrams of each other if the letters of one string can be rearranged to form the other string. Given a string, find the number of pairs of substrings of the string that are anagrams of each other.
+    public static int sherlockAndAnagrams(String s) {
+        Map<String, List<Integer>> map = new HashMap<>();
+        Set<String> anagramsList = new HashSet<>();
+        for (int i = 0; i < s.length(); i++) {
+            for (int j = i + 1; j <= s.length(); j++) {
+                String sub = s.substring(i, j);
+                if (map.containsKey(sub)) {
+                    map.get(sub).add(i);
+                } else {
+                    List<Integer> newList = new ArrayList<>();
+                    newList.add(i);
+                    map.put(sub, newList);
+                }
+            }
+        }
+
+        for (Map.Entry<String, List<Integer>> entrySet : map.entrySet()) {
+            String key = entrySet.getKey();
+            List<Integer> value = entrySet.getValue();
+            if (key.length() == 1 && value.size() == 2) {
+                //consider the string as an Anagram
+                anagramsList.add(key);
+            }
+
+            if (key.length() > 1) {
+                //reverse the key
+                String reversedKey = String.valueOf(new StringBuilder(key).reverse());
+                List<Integer> reversedKeyValue = map.get(reversedKey);
+                if (reversedKeyValue != null) {
+//                    //check if both strings are Anagrams
+                    if(isAnagram(key, reversedKey) && key.length() != s.length()){
+                        anagramsList.add(key);
+                        anagramsList.add(reversedKey);
+                    }
+                }
+            }
+        }
+
+        System.out.println("The list of pairs of strings that are Anagrams is " + anagramsList);
+        return 0;
+    }
+
+    public static int maximumToys(List<Integer> prices, int budget) {
+        // Step 1: Sort the prices in ascending order
+        Collections.sort(prices);
+
+        int count = 0; // Number of toys Mark can buy
+        int totalCost = 0; // Running total cost
+
+        // Step 2: Buy toys within the budget
+        for (int price : prices) {
+            if (totalCost + price <= budget) {
+                totalCost += price;
+                count++;
+            } else {
+                break; // Stop buying when the budget is exceeded
+            }
+        }
+
+        return count;
+    }
+
+    //Lauren has a chart of distinct projected prices for a house over the next several years. She must buy the house
+    // in one year and sell it in another, and she must do so at a loss. She wants to minimize her financial loss.
+    public static int minimumLoss(List<Integer> price) {
+        int minimumLoss = Integer.MAX_VALUE;
+        for (int x = 0; x < price.size(); x++) {
+            for (int y = x +1; y < price.size(); y++) {
+                if (price.get(x) > price.get(y)) {
+                    int diff = price.get(x) - price.get(y);
+                    if (diff < minimumLoss) {
+                        minimumLoss = diff;
+                    }
+                }
+
+            }
+        }
+
+        System.out.println("The minimum loss is " + minimumLoss);
+        return minimumLoss;
+    }
+
+    //A string is said to be a child of a another string if it can be formed by deleting 0 or more characters from the
+    // other string. Letters cannot be rearranged. Given two strings of equal length, what's the longest string that
+    // can be constructed such that it is a child of both?
+    public static int commonChild(String s1, String s2) {
+        Set<Character> set = new HashSet<>();
+        List<Character> listS1 = s1.chars().mapToObj(c -> (char) c).collect(Collectors.toList());
+        for (char c: s2.toCharArray()) {
+            if (listS1.contains(c)) {
+                set.add(c);
+            }
+        }
+
+        System.out.println("The common child is of length = " + set.size());
+        return set.size();
+    }
+
+    private static boolean isAnagram (String s1, String s2) {
+        List<Character> list1 = s1.chars().mapToObj(c -> (char) c).sorted().collect(Collectors.toList());
+        List<Character> list2 = s2.chars().mapToObj(c -> (char) c).sorted().collect(Collectors.toList());
+        return list1.equals(list2);
     }
 
     private static boolean isPowerOfTwo (long n) {
