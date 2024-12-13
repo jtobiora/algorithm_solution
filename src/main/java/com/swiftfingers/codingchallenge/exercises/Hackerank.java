@@ -48,17 +48,21 @@ public class Hackerank {
         maximumToys(Arrays.asList(1, 12, 5, 111, 200, 1000, 10), 50);
         minimumLoss(Arrays.asList(20, 15, 8, 2, 12));
         commonChild("HARRY", "SALLY");
+        specialSubstringCount(8, "mnonopoo");
+        isValid("abcc");
+        minDeletions("AAABBB");
+        triplets(Arrays.asList(3,5,7), Arrays.asList(3,6), Arrays.asList(4,6,9));
     }
 
     /**
      * Task
-     * Given a base- integer, , convert it to binary (base-). Then find and print the base- integer denoting the maximum number of
-     * consecutive 's in 's binary representation. When working with different bases, it is common to show the base as a subscript.
+     * Given a base-10 integer, , convert it to binary (base-2). Then find and print the base- integer denoting the maximum number of
+     * consecutive 1's in 's binary representation. When working with different bases, it is common to show the base as a subscript.
      * The binary representation of  125 is 1111101. In base 10, there are 5 and 1   consecutive ones in two groups. Print the maximum.
      * The binary representation of  13 is 1101, so the maximum number of consecutive 1's is 2.
      * */
     public static void binaryNumbers (int num) {
-        char[] binary = Integer.toBinaryString(num).toCharArray();
+        char[] binary = Integer.toBinaryString(num).toCharArray(); //convert to binary
         int count = 0;
         List<Integer> listCounter = new ArrayList<>();
         for (int x =0; x < binary.length; x++) {
@@ -96,7 +100,7 @@ public class Hackerank {
         return Arrays.asList(aliceScore, bobScore);
     }
 
-   // Given an array ar of integers and a positive integer k, determine the number of (i,j) pairs where i ,j and ar[i] + ar[j]  is divisible by k.
+   // Given an array ar of integers and a positive integer k, determine the number of (i,j) pairs where i < j and ar[i] + ar[j]  is divisible by k.
     public static int divisibleSumPairs (int n, int k, List<Integer> ar) {
         int pairCount = 0;
         for (int x = 0; x < ar.size(); x++) {
@@ -580,7 +584,7 @@ public class Hackerank {
         }
 
         // Step 2: Check if each column is sorted
-        //,ove through the columns
+        //move through the columns
         for (int col = 0; col < m; col++) {
             //move through the rows and compare the character of the column of each row
             for (int row = 1; row < n; row++) {
@@ -720,7 +724,8 @@ public class Hackerank {
     }
 
     //https://www.hackerrank.com/challenges/sherlock-and-anagrams/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D=dictionaries-hashmaps
-    //Two strings are anagrams of each other if the letters of one string can be rearranged to form the other string. Given a string, find the number of pairs of substrings of the string that are anagrams of each other.
+    //Two strings are anagrams of each other if the letters of one string can be rearranged to form the other string. Given a
+    // string, find the number of pairs of substrings of the string that are anagrams of each other.
     public static int sherlockAndAnagrams(String s) {
         Map<String, List<Integer>> map = new HashMap<>();
         Set<String> anagramsList = new HashSet<>();
@@ -763,6 +768,7 @@ public class Hackerank {
         return 0;
     }
 
+    //https://www.hackerrank.com/challenges/mark-and-toys/problem
     public static int maximumToys(List<Integer> prices, int budget) {
         // Step 1: Sort the prices in ascending order
         Collections.sort(prices);
@@ -785,6 +791,7 @@ public class Hackerank {
 
     //Lauren has a chart of distinct projected prices for a house over the next several years. She must buy the house
     // in one year and sell it in another, and she must do so at a loss. She wants to minimize her financial loss.
+    //https://www.hackerrank.com/challenges/minimum-loss/problem
     public static int minimumLoss(List<Integer> price) {
         int minimumLoss = Integer.MAX_VALUE;
         for (int x = 0; x < price.size(); x++) {
@@ -803,6 +810,7 @@ public class Hackerank {
         return minimumLoss;
     }
 
+    //https://www.hackerrank.com/challenges/common-child/problem
     //A string is said to be a child of a another string if it can be formed by deleting 0 or more characters from the
     // other string. Letters cannot be rearranged. Given two strings of equal length, what's the longest string that
     // can be constructed such that it is a child of both?
@@ -817,6 +825,113 @@ public class Hackerank {
 
         System.out.println("The common child is of length = " + set.size());
         return set.size();
+    }
+
+    //https://www.hackerrank.com/contests/w32/challenges/special-substrings
+    // A string is said to be a special string if either of two conditions is met:
+    //All of the characters are the same, e.g. aaa.
+    //All characters except the middle one are the same, e.g. aadaa.
+    //A special substring is any substring of a string which meets one of those criteria. Given a string, determine
+    // how many special substrings can be
+    private static long specialSubstringCount(int n, String s) {
+        Set<String> specialSubstrings = new HashSet<>();
+        for (int i = 0; i < s.length(); i++) {
+            for (int j = i + 1; j <= s.length(); j++) {
+                String sub =  s.substring(i, j);
+                if (sub.length() != s.length()) {
+                    if(isPalindrome(sub)) {
+                        specialSubstrings.add(sub);
+                    }
+                }
+            }
+        }
+
+        System.out.println("Special substrings are ::: " + specialSubstrings);
+        return specialSubstrings.size();
+    }
+
+    //https://www.hackerrank.com/challenges/sherlock-and-valid-string/problem#:~:text=Sherlock%20considers%20a%20string%20to,the%20same%20number%20of%20times.
+    //Sherlock considers a string to be valid if all characters of the string appear the same number of times. It is
+    // also valid if he can remove just  character at  index in the string, and the remaining characters will occur the same
+    // number of times. Given a string , determine if it is valid. If so, return YES, otherwise return NO.
+    public static String isValid(String s) {
+        Map<Character, Integer> frequencyMap = new HashMap<>();
+        for (char c : s.toCharArray()) {
+            frequencyMap.put(c, frequencyMap.getOrDefault(c, 0) + 1);
+        }
+
+        List<Integer> list = new ArrayList<>(frequencyMap.values().stream().toList());
+        Collections.sort(list);
+        for (int i = 0; i < list.size(); i++) {
+            if (i == 0) continue;
+            int curr = list.get(i);
+            int prev = list.get(i - 1);
+            if (curr - prev > 1) {
+                int newValue = curr - prev;
+                if (newValue > 1) {
+                    System.out.println("String is not a valid one");
+                    return "NO";
+                }
+            }
+        }
+
+        System.out.println("String is valid");
+        return "YES";
+    }
+
+    public static boolean isPalindrome (String s) {
+        int low = 0;
+        int high = s.length() - 1;
+
+        while (low < high) {
+            if (s.charAt(low) != s.charAt(high)) {
+                return false;
+            }
+            low++;
+            high--;
+        }
+
+        return true;
+    }
+
+    //https://www.hackerrank.com/challenges/alternating-characters/problem
+    //You are given a string containing characters A and B only. Your task is to change it into a string such that
+    //there are no matching adjacent characters. To do this, you are allowed to delete zero or more characters in the
+    // string. Your task is to find the minimum number of required deletions.
+    public static int minDeletions(String s) {
+        int deletions = 0;
+
+        // Iterate through the string
+        for (int i = 0; i < s.length() - 1; i++) {
+            if (s.charAt(i) == s.charAt(i + 1)) {
+                // If two adjacent characters are the same, delete one
+                deletions++;
+            }
+        }
+
+        System.out.println("Minimum deletions is " + deletions);
+
+        return deletions;
+    }
+
+    //https://www.hackerrank.com/challenges/triple-sum/problem
+    public static long triplets(List<Integer> pArr, List<Integer> qArr, List<Integer> rArr) {
+       Set<List<Integer>> set = new HashSet<>();
+        for (Integer value : pArr) {
+            for (Integer integer : qArr) {
+                for (Integer item : rArr) {
+                    int pVal = value;
+                    int qVal = integer;
+                    int rVal = item;
+                    if (pVal <= qVal && qVal >= rVal) {
+                        set.add(List.of(pVal, qVal, rVal));
+                    }
+                }
+            }
+        }
+
+        System.out.println("The unique triplets are: " +set);
+       return 0;
     }
 
     private static boolean isAnagram (String s1, String s2) {

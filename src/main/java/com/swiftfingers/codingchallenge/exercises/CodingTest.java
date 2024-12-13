@@ -3,6 +3,7 @@ package com.swiftfingers.codingchallenge.exercises;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class CodingTest {
     public static void main(String[] args) {
@@ -81,15 +82,6 @@ public class CodingTest {
         else
             System.out.println("The sum was not found!");
 
-//        int firstIndex = -1;
-//        int secondIndex = -1;
-//        for (int x =0; x < nums.length; x++) {
-//            int sum = nums[x] + nums[x - 1];
-//            if (sum == target) {
-//                firstIndex = x;
-//                secondIndex = x - 1;
-//            }
-//        }
 
     }
 
@@ -115,9 +107,8 @@ public class CodingTest {
             }
         }
 
-
         String s = list.stream().collect(Collectors.maxBy(Comparator.comparingInt(String::length))).get();
-        System.out.println(s);
+        System.out.println("The longest substring is " +s);
     }
 
 
@@ -312,7 +303,7 @@ public class CodingTest {
 
     public static void convertStringToUppercase () {
         String str = "This is intellij software";
-        List<String> st = Arrays.asList(str.split("\\s"));
+        String[] st = str.split("\\s");
         StringBuilder builder = new StringBuilder();
         for(String s : st) {
             builder.append(String.valueOf(s.charAt(0)).toUpperCase()).append(s.substring(1)).append(" ");
@@ -330,11 +321,17 @@ public class CodingTest {
         Collections.sort(list);
         StringBuilder builder = new StringBuilder();
 
-        for(int x = list.size() -1; x >= 0; x--) {
-            builder.append(list.get(x)).append(" ");
+        for (int i = 0; i < list.size(); i++) {
+            char[] c = list.get(i).toCharArray();
+            Arrays.sort(c);
+            for(int x = 0; x < c.length; x++) {
+                builder.append(c[x]);
+            }
+            builder.append(" ");
         }
 
-        System.out.println(builder.toString().trim());
+
+        System.out.println("The sorted string is ::: " +builder.toString().trim());
 
     }
 
@@ -418,7 +415,24 @@ public class CodingTest {
       }
 
       builder.append(replacedStr);
-      System.out.println("The characters that are not common in the two strings are " + builder.toString());
+
+//        StringBuilder result = new StringBuilder();
+//
+//        // Append characters in A but not in B
+//        for (char c : A.toCharArray()) {
+//            if (!B.contains(String.valueOf(c))) {
+//                result.append(c);
+//            }
+//        }
+//
+//        // Append characters in B but not in A
+//        for (char c : B.toCharArray()) {
+//            if (!A.contains(String.valueOf(c))) {
+//                result.append(c);
+//            }
+//        }
+//
+     System.out.println("The characters that are not common in the two strings are " + builder.toString());
 
 
     }
@@ -455,30 +469,33 @@ public class CodingTest {
 //            }
 //        }
 //
-       return -1;
+        String s = "programming";
+        String x = "min";
+        System.out.println("index of occurrence ::: " +s.indexOf(x));
+        return s.indexOf(x);
     }
 
     //Given a number N the task is to find the largest prime factor of that number
     public static void largestPrimeFactor () {
-        int num = 5;
-        List<Integer> list = new ArrayList<>();
-        for (int i = 1; i <= num; i++) {
-            if (isPrimeNumber(i)) {
-                if (num % i == 0) {
-                    list.add(i);
-                }
-            }
-        }
-
-       int maxPrimeFactor = list.stream().mapToInt(Integer::intValue).max().getAsInt();
-        System.out.println("Largest prime factor " + maxPrimeFactor);
+//        int num = 5;
+//        List<Integer> list = new ArrayList<>();
+//        for (int i = 1; i <= num; i++) {
+//            if (isPrimeNumber(i)) {
+//                if (num % i == 0) {
+//                    list.add(i);
+//                }
+//            }
+//        }
+//
+//       int maxPrimeFactor = list.stream().mapToInt(Integer::intValue).max().getAsInt();
+//        System.out.println("Largest prime factor " + maxPrimeFactor);
     }
 
 
     //Given a number N, check if the number is a perfect number. A number is said to be perfect if the sum of
     //all its factors excluding the number itself is equal to the number
     public static void isPerfectNumber() {
-        int num = 6;
+        int num = 28;
         int sum = 0;
 
         for (int k = 1; k < num; k++) {
@@ -541,7 +558,7 @@ public class CodingTest {
     }
 
     //Given an array of positive integers. Your task is to find the leaders in the array. An element is a leader
-    //if it is greater than or equal to all equal to all the elements to its right side. The rightmost element
+    //if it is greater than or equal to all the elements to its right side. The rightmost element
     //is always a leader
     public static void findArrayLeaders () {
         int[] array = {10,32,5,12,9,13,4};
@@ -572,8 +589,8 @@ public class CodingTest {
         List<Integer> list = new ArrayList<>();
 
         Map<Integer, Integer> elementMap = new HashMap<>();
-        for (int x = 0; x < array.length; x++) {
-            elementMap.put(array[x], elementMap.containsKey(array[x]) ?  elementMap.get(array[x]) + 1 : 1);
+        for (int i : array) {
+            elementMap.put(i, elementMap.containsKey(i) ? elementMap.get(i) + 1 : 1);
         }
 
        for(Map.Entry<Integer, Integer> entry: elementMap.entrySet()) {
@@ -588,28 +605,38 @@ public class CodingTest {
     //Given an array nums[] of size n, construct a Product array P (of same size n) such that p[i] is equal
     //to the product of all the elements of nums except nums[i]
     public static void productArrayPuzzle () {
-       int[] array = {10,3,5,6,2};
-      // Arrays.sort(array);
-       int multiply = 1;
-       int total = 1;
-       List<Integer> integerList = new ArrayList<>();
+//       int[] array = {10,3,5,6,2};
+//      // Arrays.sort(array);
+//       int multiply = 1;
+//       int total = 1;
+//       List<Integer> integerList = new ArrayList<>();
+//
+//       for (int x = 0; x < array.length; x++) {
+//           if (x == 0) {
+//               multiply = 1;
+//           } else {
+//               multiply = multiply * array[x - 1];
+//           }
+//
+//           for (int y = x + 1; y < array.length; y++) {
+//              total = total * array[y];
+//           }
+//           total = multiply * total;
+//           integerList.add(total);
+//           total = 1;
+//       }
 
-       for (int x = 0; x < array.length; x++) {
-           if (x == 0) {
-               multiply = 1;
-           } else {
-               multiply = multiply * array[x - 1];
-           }
+       List<Integer> originalList = Arrays.asList(10,3,5,6,2);
+       List<Integer> newList = new ArrayList<>();
+        for (int x = 0; x < originalList.size(); x++) {
+            List<Integer> filteredList = new ArrayList<>(originalList.subList(0, x).stream().toList());
+            filteredList.addAll(originalList.subList(x + 1, originalList.size()));
 
-           for (int y = x + 1; y < array.length; y++) {
-              total = total * array[y];
-           }
-           total = multiply * total;
-           integerList.add(total);
-           total = 1;
-       }
+            Integer val = filteredList.stream().reduce(1, (a, b) -> a * b);
+            newList.add(val);
+        }
 
-       System.out.println("product puzzle list " +integerList);
+        System.out.println("product puzzle list " + newList);
     }
 
     //Given an unsorted array Arr of size N of positive integers. One number 'A' from set {1,2,...,N} is
@@ -693,7 +720,7 @@ public class CodingTest {
         }
      }
 
-     //Given the head of aa linked list, remove the nth node from the end of the list and return its head
+     //Given the head of a linked list, remove the nth node from the end of the list and return its head
      public static void removeNthNodeFromList () {
          List<Integer> linkedList = new LinkedList<>();
          linkedList.add(1);
@@ -721,20 +748,32 @@ public class CodingTest {
      //Given an array of integers nums sorted in non-decreasing order, find the starting and ending position of a
     //given target value
      public static void findFirstAndLastPositionInArray () {
-        int nums [] = {5, 7, 7, 8, 8, 10};
-        int target = 7;
-        List<String> list = new LinkedList<>();
-        for (int i = 0; i < nums.length; i++) {
-            if (nums[i] == target) {
-                list.add(String.valueOf(i));
-            }
-        }
+//        int nums [] = {5, 7, 7, 8, 8, 10};
+//        int target = 7;
+//        List<String> list = new LinkedList<>();
+//        for (int i = 0; i < nums.length; i++) {
+//            if (nums[i] == target) {
+//                list.add(String.valueOf(i));
+//            }
+//        }
+//
+//        if (!list.isEmpty()){
+//            String str = String.join(",", list.get(0), list.get(list.size() -1));
+//            System.out.println("The first and last elements are " + str);
+//        } else
+//            System.out.println("The first and last elements are (-1,-1)");
 
-        if (!list.isEmpty()){
-            String str = String.join(",", list.get(0), list.get(list.size() -1));
-            System.out.println("The first and last elements are " + str);
-        } else
-            System.out.println("The first and last elements are (-1,-1)");
+         int nums [] = {5, 7, 7, 8, 8, 10};
+         int target = 7;
+         List<Integer> list = Arrays.stream(nums).boxed().collect(Collectors.toList());
+         int startingPosition =  list.indexOf(target);
+         int endingPosition = list.lastIndexOf(target);
+
+         if (startingPosition == -1 || endingPosition == -1) {
+             System.out.println("Value of target does not exist");
+         } else {
+             System.out.println("Starting position " + startingPosition + " Ending position " + endingPosition);
+         }
      }
 
      //Given an unsorted integer array nums, return the smallest missing positive integer.
@@ -820,14 +859,14 @@ public class CodingTest {
         }
      }
 
-     //You are given a large integer represented as an integer array digits where each digits[i] is the ith digit of the
+    //You are given a large integer represented as an integer array digits where each digits[i] is the ith digit of the
     //integer. The digits are ordered from the most significant to least significant in left to right order. The large
     //integer does not contain any leading 0's. increment the large integer by one and return the resulting array of digits
      public static void plusOne () {
         int[] digits = {4,3,2,1};
         List<Integer> numList = new ArrayList<>();
         int num = 0;
-        for (int j =0 ; j < digits.length; j++) {
+        for (int j = 0; j < digits.length; j++) {
             num = digits[j];
             if ( j == digits.length - 1) {
                 num  = digits[j] + 1;
