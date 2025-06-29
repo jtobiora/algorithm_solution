@@ -9,6 +9,7 @@ public class LeetCode {
     public static void main(String[] args) {
         romanToInt("MCMXCIV");
         longestCommonPrefix(new String[]{"flower","flow","flight"});
+        System.out.println("Is string valid ? " + isValid("()"));
     }
 
     //https://leetcode.com/problems/roman-to-integer/description/
@@ -94,5 +95,71 @@ public class LeetCode {
 
         System.out.println(builder.toString());
         return builder.toString();
+    }
+
+    public static boolean isValid(String str) {
+        Map<Character, Character> openCharMap = new HashMap<>();
+        openCharMap.put('(', ')');
+        openCharMap.put('{', '}');
+        openCharMap.put('[', ']');
+
+        Map<Character, Character> closedCharMap = new HashMap<>();
+        closedCharMap.put(')', '(');
+        closedCharMap.put('}', '{');
+        closedCharMap.put(']', '[');
+
+        for (int x = 0; x < str.length(); x++) {
+            char c = str.charAt(x);
+             //check if char is a beginning type of char
+            if (c == '(' || c == '{' || c == '[') {
+                Character endChar = openCharMap.get(c); //get the end char bracket
+
+                if (!str.contains(String.valueOf(endChar))) {
+                    return false;
+                } else {
+                    int index = str.indexOf(String.valueOf(endChar));
+                    int lastIndex = str.lastIndexOf(String.valueOf(endChar));
+                    if (index != lastIndex) {
+                        return false;
+                    }
+                }
+
+                //if the difference between the index of beginning char and the end char is not odd, return false
+                int indexOfBeginningChar = str.indexOf(String.valueOf(c));
+                int indexOfEndChar  = str.indexOf(String.valueOf(endChar));
+                if ((indexOfBeginningChar - indexOfEndChar) % 2 == 0) {
+                    return false;
+                }
+            } else if (c == ')' || c == '}' || c == ']') {
+                //check if the string contains the beginning char too
+                Character openChar = closedCharMap.get(c); //get the open char bracket
+                if (!str.contains(String.valueOf(openChar))) {
+                    return false;
+                }
+                int indexOfOpenBracket = str.indexOf(String.valueOf(openChar));
+                int lastIndexOfOpenBracket = str.lastIndexOf(String.valueOf(openChar));
+                if (indexOfOpenBracket != lastIndexOfOpenBracket) {
+                    return false;
+                }
+
+                //if the end char comes before the start, return false
+                int indexOfCloseBracket = str.indexOf(String.valueOf(c));
+
+                if (str.length() == 2 && indexOfOpenBracket > indexOfCloseBracket){
+                    return false;
+                }
+
+
+                 if (str.length() > 2) {
+                     if (indexOfOpenBracket > indexOfCloseBracket) {
+                         return false;
+                     }
+                 }
+            }
+
+        }
+
+        return true;
+
     }
 }

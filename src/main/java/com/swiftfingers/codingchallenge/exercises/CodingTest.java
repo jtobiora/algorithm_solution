@@ -8,6 +8,7 @@ import java.util.stream.Stream;
 public class CodingTest {
     public static void main(String[] args) {
         findIndicesOfSum();
+        twoSum(new int[] {2,7,11,15}, 9);
         //findRepeating("abcgd");
         findTheLongestSubstringWithoutRepeatingChars("school");
         findTheLongestPalindromicSubstring("babad");
@@ -46,10 +47,13 @@ public class CodingTest {
         longestConsecutiveSequence();
         findPeakElement();
         productofArrayExceptSelf();
+        productofArrayExceptSelf2();
         countOfSmallerNumbersExceptSelf();
         checkIfStringsKAnagrams();
         findMajorityElement();
         reverseAStringAndPreserveSpaces();
+        findPivotIndex(new int[] {1,2,3,4,6});
+        pivotElement();
     }
 
 
@@ -62,7 +66,7 @@ public class CodingTest {
         int indexOne = -1;
         int indexTwo = -1;
         boolean found = false;
-        for (int x =0; x < nums.length; x++) {
+        for (int x = 0; x < nums.length; x++) {
             if (x == 0) continue;
 
             curr = nums[x];
@@ -83,6 +87,25 @@ public class CodingTest {
             System.out.println("The sum was not found!");
 
 
+    }
+
+    //Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.
+    //You may assume that each input would have exactly one solution, and you may not use the same element twice.
+    //You can return the answer in any order.
+    public static int[] twoSum(int[] nums, int target) {
+        int[] res = new int[2];
+        for (int x =0; x < nums.length; x++) {
+            for (int y = x + 1; y < nums.length; y++) {
+                int result = nums[x] + nums[y];
+                if (result == target) {
+                    res[0] = x;
+                    res[1] = y;
+                    break;
+                }
+            }
+        }
+        System.out.println("Result of computation: " + res[0] + " " + res[1]);
+        return res;
     }
 
     //verify if a string has repeating character
@@ -111,19 +134,37 @@ public class CodingTest {
         System.out.println("The longest substring is " +s);
     }
 
+    public static void findTheLongestPalindromicSubstring2 (String str) {
+        String strLongestLength = "";
+        for (int x = 0; x < str.length(); x++) {
+            Set<Character> charSet = new HashSet<>();
+            StringBuilder currentString = new StringBuilder();
+           for (int y = x; y < str.length(); y++)  {
+               char c = str.charAt(y);
+               if (charSet.contains(c)) break;
+
+               charSet.add(c);
+               currentString.append(c);
+
+               if (currentString.length() > strLongestLength.length()) {
+                   strLongestLength = currentString.toString();
+               }
+           }
+        }
+    }
 
     public static void findTheLongestPalindromicSubstring (String str) {
         List<String> list = new ArrayList<>();
-        //find all the substrings
+             //find all the substrings
         for (int i = 0; i < str.length(); i++) {
             for (int j = i + 1; j <= str.length(); j++) {
                 String sub = str.substring(i, j);
-                if(isPalindrome(sub)) {
+                if (isPalindrome(sub)) {
                     list.add(sub);
                 }
             }
         }
-        String s = list.stream().collect(Collectors.maxBy(Comparator.comparingInt(String::length))).get();
+        String s = list.stream().max(Comparator.comparingInt(String::length)).get();
         System.out.println(s);
 
     }
@@ -143,6 +184,8 @@ public class CodingTest {
         return true;
     }
 
+    //Write a function to find the longest common prefix string amongst an array of strings.
+    //If there is no common prefix, return an empty string "".
     public static void longestCommonPrefix () {
         String[] st = {"flour","flower","flourish","flow","floor"};
 //        Set<String> set = new TreeSet<>();
@@ -169,6 +212,7 @@ public class CodingTest {
         for (Character ch: str.toCharArray()) {
             map.put(ch, map.containsKey(ch) ? map.get(ch) + 1 : 1);
         }
+
 
         Character firstNonRepeatingChar = map.entrySet().stream().filter(f -> f.getValue() == 1)
                 .findFirst().get().getKey();
@@ -201,6 +245,7 @@ public class CodingTest {
         return sum == num;
     }
 
+    //Given an integer 'num', the task is to check whether the sum of digits of n is palindrome or not.
     public static void isDigitSumPalindrome(int num) {
         String st = String.valueOf(num);
         char[] ch = st.toCharArray();
@@ -211,6 +256,7 @@ public class CodingTest {
         }
 
         System.out.println(isPalindrome(String.valueOf(sum)));
+
 
     }
 
@@ -237,7 +283,7 @@ public class CodingTest {
         System.out.println("The kth digit is " + numToFind);
     }
 
-    //Given a positive number X, find the largest jumping number which is smaller than or equal to X. A number is
+   // Given a positive number X, find the largest jumping number which is smaller than or equal to X. A number is
     //called a jumping number if all the adjacent digits in it differ by only 1. E.g 78987 is a jumping num while
     //7869 is not
     public static boolean jumpingNums(int num) {
@@ -315,29 +361,19 @@ public class CodingTest {
 
     //Given a string containing only lowercase alphabets, the task is to sort it in lexicographically descending order
     public static void sortAString() {
-        String s = "sorted list object";
-        String[] stArray = s.split(" ");
-        List<String> list = Arrays.asList(stArray);
-        Collections.sort(list);
-        StringBuilder builder = new StringBuilder();
+        String str = "Hello";
+        List<Character> charList = new ArrayList<>();
 
-        for (int i = 0; i < list.size(); i++) {
-            char[] c = list.get(i).toCharArray();
-            Arrays.sort(c);
-            for(int x = 0; x < c.length; x++) {
-                builder.append(c[x]);
-            }
-            builder.append(" ");
+        for (char c : str.toCharArray()) {
+            charList.add(c);
         }
-
-
-        System.out.println("The sorted string is ::: " +builder.toString().trim());
+        Collections.sort(charList, Collections.reverseOrder());
+        System.out.println(charList);
 
     }
 
     //Given two strings S1 and S2 as input, the task is to merge them alternatively i.e the first character of S1
     //then the first character of S2 and so on till the strings end.
-
     public static void mergeStrings() {
         String s1 = "Hello";
         String s2 = "Nigeria";
@@ -380,7 +416,7 @@ public class CodingTest {
 
         for (Character c : charArray) {
             if (!Character.isDigit(c)) {
-                if (builder.length() > 0) {
+                if (!builder.isEmpty()) {
                     list.add(Integer.parseInt(builder.toString()));
                     builder.setLength(0);
                 }
@@ -392,11 +428,10 @@ public class CodingTest {
 
         list.add(Integer.parseInt(builder.toString()));
 
-
+//        list.stream().mapToInt(Integer::intValue).max();
         int max = list.stream().max(Integer::compare).get();
         System.out.println("Maximum value is ::: " + max);
     }
-
 
     //Given two strings A and B, find the characters that are not common in the strings
     public static void uncommonCharacters () {
@@ -568,13 +603,14 @@ public class CodingTest {
         for (int x = 0; x < array.length; x++) {
             flag = false;
             for (int y = x + 1; y < array.length; y++) {
-              if (array[x] < array[y]) {
-                 flag = true;
-              }
+                if (array[x] < array[y]) {
+                    flag = true;
+                    break;
+                }
 
             }
 
-            if (flag == false)
+            if (!flag)
                 leadersList.add(array[x]);
         }
 
@@ -593,7 +629,7 @@ public class CodingTest {
             elementMap.put(i, elementMap.containsKey(i) ? elementMap.get(i) + 1 : 1);
         }
 
-       for(Map.Entry<Integer, Integer> entry: elementMap.entrySet()) {
+        for(Map.Entry<Integer, Integer> entry: elementMap.entrySet()) {
             if (entry.getValue() > array.length/2) {
                  list.add(entry.getKey());
             }
@@ -626,6 +662,7 @@ public class CodingTest {
 //           total = 1;
 //       }
 
+
        List<Integer> originalList = Arrays.asList(10,3,5,6,2);
        List<Integer> newList = new ArrayList<>();
         for (int x = 0; x < originalList.size(); x++) {
@@ -637,38 +674,83 @@ public class CodingTest {
         }
 
         System.out.println("product puzzle list " + newList);
+
+        List<Integer> list = new ArrayList<>();
+        for (int x =0; x < originalList.size(); x++) {
+            int sum = 1;
+            for (int y = x + 1; y < originalList.size(); y++) {
+                sum *= originalList.get(y);
+            }
+            if (x == 0){
+                list.add(sum);
+            } else {
+                sum *= originalList.subList(0, x).stream().reduce(1, (a, b) -> a * b);
+                list.add(sum);
+            }
+        }
+
     }
 
     //Given an unsorted array Arr of size N of positive integers. One number 'A' from set {1,2,...,N} is
     //missing and one number 'B' occurs twice in the array. Find these two numbers
     public static void findMissingAndRepeatingNums () {
-        int[] array = {1,3,3};
-        List<Integer> arrList = Arrays.stream(array).boxed().collect(Collectors.toList());
-        Map<Integer, Integer> holderMap = new LinkedHashMap<>();
-        List<Integer> repititionsList = new ArrayList<>();
-        boolean flag = true;
-        StringBuilder builder = new StringBuilder();
-        int loopTracker = 1;
+//        int[] array = {1,3,3};
+//        List<Integer> arrList = Arrays.stream(array).boxed().collect(Collectors.toList());
+//        Map<Integer, Integer> holderMap = new LinkedHashMap<>();
+//        List<Integer> repititionsList = new ArrayList<>();
+//        boolean flag = true;
+//        StringBuilder builder = new StringBuilder();
+//        int loopTracker = 1;
+//
+//        for (int x = 0; x < array.length; x++ ) {
+//            holderMap.put(array[x], holderMap.containsKey(array[x]) ? holderMap.get(array[x]) + 1 : 1);
+//        }
+//
+//        for(Map.Entry<Integer, Integer> entry: holderMap.entrySet()) {
+//            int key = entry.getKey();
+//            if (entry.getValue() > 1) {
+//                repititionsList.add(key);
+//            }
+//
+//            if(flag && !arrList.contains(key + 1) && loopTracker != holderMap.size()) {
+//                flag = false;
+//                int smallestMissingItem = key + 1;
+//                builder.append(smallestMissingItem);
+//            }
+//            loopTracker++;
+//        }
+//        System.out.println("The number that is repeated is " +repititionsList);
+//        System.out.println("The smallest missing number is " + builder.toString());
 
-        for (int x = 0; x < array.length; x++ ) {
-            holderMap.put(array[x], holderMap.containsKey(array[x]) ? holderMap.get(array[x]) + 1 : 1);
+
+
+        int[] array2 = {1,2,3,3,5};
+        StringBuilder builder1 = new StringBuilder();
+        List<Integer> numbers = new ArrayList<>(Arrays.stream(array2).boxed().toList());
+        Collections.sort(numbers);
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int n : numbers) {
+            map.put(n, map.containsKey(n) ? map.get(n) + 1 : 1);
         }
 
-        for(Map.Entry<Integer, Integer> entry: holderMap.entrySet()) {
-            int key = entry.getKey();
-            if (entry.getValue() > 1) {
-                repititionsList.add(key);
+        int prevKey = 0;
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            Integer value = entry.getValue();
+            if (value > 1) {
+                builder1.append(value);
+            }
+            Integer key = entry.getKey();
+            if (key - prevKey > 1) {
+                System.out.println("value missing ----- " + (prevKey + 1));
+                builder1.append(prevKey + 1);
+                break;
+            } else {
+                prevKey = key;
             }
 
-            if(flag && !arrList.contains(key + 1) && loopTracker != holderMap.size()) {
-                flag = false;
-                int smallestMissingItem = key + 1;
-                builder.append(smallestMissingItem);
-            }
-            loopTracker++;
+
         }
-        System.out.println("The number that is repeated is " +repititionsList);
-        System.out.println("The smallest missing number is " + builder.toString());
+
     }
 
 
@@ -679,12 +761,15 @@ public class CodingTest {
         int index = 1;
         int [] array = {1, 2, 3, 4, 5, 6, 7};
         int k = 8;
-        Map<Integer, String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<>();
         for (int i = 0; i < array.length; i++) {
             for (int j = i + 1; j < array.length; j++) {
                 if (array[i] + array[j] == k) {
-                   map.put(index, String.join("," ,String.valueOf(array[i]), String.valueOf(array[j])));
-                   index++;
+                    String ind = array[i] + "" + array[j];
+                    if (!map.containsKey(ind)) {
+                        map.put(ind, String.join("," ,String.valueOf(array[i]), String.valueOf(array[j])));
+                    }
+
                 }
             }
         }
@@ -821,7 +906,7 @@ public class CodingTest {
 //         for (int x = 0; x < num.length; x++) {
 //             if (num[x] <= 0) continue;
 //
-//             if ((x + 1) <=  num.length) {
+//             if ((x + 1) <  num.length) {
 //                 int current = x;
 //                 int next = x + 1;
 //
@@ -939,40 +1024,28 @@ public class CodingTest {
     }
 
 
-    //A peak element is an elemnt that is strictly greater than its neighbours. Given a 0-indexed integer array nums,
+    //A peak element is an element that is strictly greater than its neighbours. Given a 0-indexed integer array nums,
     //find a peak element and return its index. If the array contains multiple peaks, return the index to any of the
     //peaks.
     public static void findPeakElement () {
-        int [] nums = {1, 2, 1, 3, 5, 6, 4};
-
-        int prev = nums[0];
-        int current = 0;
-        int next = 0;
-        String peakElement = "";
+        int[] nums = {1, 2, 1, 3, 5, 6, 4};
+        int peakIndex = -1;
 
         for (int i = 0; i < nums.length; i++) {
-            if (i == 0 ) continue;
+            int prev = (i == 0) ? Integer.MIN_VALUE : nums[i - 1];
+            int next = (i == nums.length - 1) ? Integer.MIN_VALUE : nums[i];
 
-            if(i != nums.length -1) {
-                prev = nums[i - 1];
-                current = nums [i];
-                next = nums[i + 1];
-            }
-
-            if (current > prev && current > next) {
-                peakElement = String.valueOf(i);
+            if (nums[i] > prev && nums[i] > next) {
+                peakIndex = i;
                 break;
-            }
-
-            if (i == nums.length - 1) {
-                if (current > prev) {
-                    peakElement = String.valueOf(i);
-                }
             }
         }
 
-        System.out.println("The peak element index position is at " + peakElement);
-
+        if (peakIndex != -1) {
+            System.out.println("The peak element index position is at " + peakIndex);
+        } else {
+            System.out.println("No peak element found.");
+        }
     }
 
 
@@ -1004,6 +1077,20 @@ public class CodingTest {
       System.out.println("The array returned is " +numList);
     }
 
+    //Given an integer array nums, return an array answer such that answer[i] is equal to the product of all the elements
+    //of nums except nums[i]
+    public static void productofArrayExceptSelf2 () {
+        int[] numArray = {1, 2, 3, 4};
+        List<Integer> list = Arrays.stream(numArray).boxed().toList();
+        List<Integer> newList = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            int leftProd = list.subList(0, i).stream().reduce(1, (a, b) -> a * b);
+            int rightProd =  list.subList(i + 1, list.size()).stream().reduce(1, (a, b) -> a * b);
+            newList.add(leftProd * rightProd);
+        }
+        System.out.println("Products Except self ::: " + newList);
+    }
+
     //Given an integer array nums, return an integer array counts where counts[i] is the number of smaller elements
     //to the right of nums[i]
     public static void countOfSmallerNumbersExceptSelf () {
@@ -1028,7 +1115,7 @@ public class CodingTest {
     }
 
 
-    //Given two strings of lowercase alphabets and a value K, your task is to complete the given fucntion which tells if two strings are K-Anagrams
+    //Given two strings of lowercase alphabets and a value K, your task is to complete the given function which tells if two strings are K-Anagrams
     //of each other or not. Two strings are K-Anagrams of each other if these conditions are true:
     //1. Both have the same number of characters
     //2. Two strings can become anagram by changing at most K characters in a string
@@ -1062,21 +1149,73 @@ public class CodingTest {
     //Write a java program to reverse a string while preserving the position of spaces. For example, "I Am Not"
     //is the given string then the reverse of this string is "t on amI "
     public static void reverseAStringAndPreserveSpaces () {
-        String s = "we keep pushing always!";
+        String s = "we keep pushing";
         char [] c = s.toCharArray();
         List<Integer> indexes = new LinkedList<>();
-        StringBuilder builder = new StringBuilder();
+        StringBuilder newString = new StringBuilder();
         for (int x = 0; x < c.length; x++) {
             if (Character.isWhitespace(c[x])) {
                 indexes.add(x);
             }
         }
 
-        //TODO
+        int firstElement = c.length -1;
+        int indexCounter = 0;
         for (int x = c.length -1; x >=0; x--) {
+            if (x == firstElement) {
+                newString.append(c[x]);
+                indexCounter++;
+                continue;
+            }
 
+            if (!Character.isWhitespace(c[x])) {
+                if (indexes.contains(indexCounter)) {
+                    newString.append(" ").append(c[x]);
+                } else {
+                    newString.append(c[x]);
+                }
+                indexCounter++;
+            }
         }
 
+        System.out.println("New String after reverse >>>>>> " + newString);
+
+    }
+
+   // Given an array of numbers, find the index of the pivot element such that: the sum of the numbers to the left of it
+   // equals the sum of the numbers to the right of it. If no such index exists, return -1.
+    public static int findPivotIndex(int[] nums) {
+        int totalSum = 0;
+        for (int num : nums) {
+            totalSum += num;
+        }
+
+        int leftSum = 0;
+        for (int i = 0; i < nums.length; i++) {
+            int rightSum = totalSum - leftSum - nums[i];
+            if (leftSum == rightSum) {
+                return i;
+            }
+            leftSum += nums[i];
+        }
+
+        return -1; // no pivot found
+    }
+
+    public static int pivotElement () {
+        int[] array = {1,2,3,4,6};
+        List<Integer> list = Arrays.stream(array).boxed().toList();
+        for (int x = 0; x < list.size(); x++) {
+            if (x == 0) continue;
+
+            int leftSum = list.subList(0, x).stream().reduce(0, Integer::sum);
+            int rightSum =  list.subList(x + 1, list.size()).stream().reduce(0, Integer::sum);
+            if (leftSum == rightSum) {
+                return list.get(x);
+            }
+        }
+
+        return -1;
     }
 
 }

@@ -56,7 +56,7 @@ public class Hackerank {
 
     /**
      * Task
-     * Given a base-10 integer, , convert it to binary (base-2). Then find and print the base- integer denoting the maximum number of
+     * Given a base-10 integer, convert it to binary (base-2). Then find and print the base- integer denoting the maximum number of
      * consecutive 1's in 's binary representation. When working with different bases, it is common to show the base as a subscript.
      * The binary representation of  125 is 1111101. In base 10, there are 5 and 1   consecutive ones in two groups. Print the maximum.
      * The binary representation of  13 is 1101, so the maximum number of consecutive 1's is 2.
@@ -76,6 +76,8 @@ public class Hackerank {
                 count++;
             }
         }
+
+        System.out.println("Binary numbers count of consecutive 1's >>>>>> " + listCounter);
     }
 
 //    Alice and Bob each created one problem for HackerRank. A reviewer rates the two challenges, awarding points on a scale from

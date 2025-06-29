@@ -1,0 +1,11 @@
+22 - 26th June
+1. Zenith SFTP application was not working to help transfer funds as a result of the password change done on the database. This was fixed
+and I helped operations move some funds.
+2. Validation was done for Paypal sign up. Only registered and approved businesses can sign up
+3. Multiple documents of the same type being uploaded on partners was fixed
+4. Created an endpoint in merchant service to get Transactions done on Virtual accounts of merchants from payment service
+
+
+
+
+
