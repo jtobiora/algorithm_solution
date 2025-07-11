@@ -1,9 +1,16 @@
-22 - 26th June
-1. Zenith SFTP application was not working to help transfer funds as a result of the password change done on the database. This was fixed
-and I helped operations move some funds.
-2. Validation was done for Paypal sign up. Only registered and approved businesses can sign up
-3. Multiple documents of the same type being uploaded on partners was fixed
-4. Created an endpoint in merchant service to get Transactions done on Virtual accounts of merchants from payment service
+- I synced with Blessing to close ticket SK-941 (The error message being displayed when a merchant has insufficient balance and tries to perform a payout).
+- I synced with Emmanuel to fix the issue arising from a partner trying to complete sign up.
+- I provided support for Zenith Sftp
+- I  also worked with Amos so the frontend could complete document upload on Super Admin. I am currently working on an endpoint he requested to get the kyc documents applicable to different countries and partner types.
+- I also started migrating the different services am working on to ENVs.
+- Fixed The system displays a different virtual account name from the one the user assigned during virtual account creation (ticket SK-1153).
+- working on All virtual accounts created are automatically removed from the dashboard after a certain period (ticket SK-1163)
+- uploaded document for a merchant on merchant service (Tech Spice Limited)
+
+Today:
+- Complete the ENV project migration
+- Provide and test the endpoint for partners which Amos requested
+- Fix the issue reported by QA whereby All virtual accounts created are automatically removed from the dashboard after a certain period (ticket SK-1163)
 
 
 

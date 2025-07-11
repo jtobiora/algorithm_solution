@@ -18,7 +18,7 @@ public class Hackerank {
         compareTriplets(List.of(11,20,32), List.of(21,33,12));
         System.out.println( divisibleSumPairs(6, 3, List.of(1, 3, 2, 6, 1, 2)));
         sockMerchant(9, List.of(10, 20, 20, 10, 10, 30, 50, 10, 20));
-        miniMaxSum(List.of(1, 2, 3, 4, 5));
+        miniMaxSum(Arrays.asList(1, 2, 3, 4, 5));
         gradingStudents(List.of(73, 67, 38, 33));
         saveThePrisoner(7, 19, 2);
         beautifulDays(20, 23, 6);
@@ -145,19 +145,29 @@ public class Hackerank {
     //Given five positive integers, find the minimum and maximum values that can be calculated by summing exactly four of the
     // five integers. Then print the respective minimum and maximum values as a single line of two space-separated long integers.
     public static void miniMaxSum(List<Integer> arr) {
-        List<Integer> numList = new ArrayList<>();
-        for (int x = 0; x < arr.size(); x++) {
-            int finalX = x;
-            int sum = arr.stream()
-                    .filter(value -> !Objects.equals(value, arr.get(finalX))) // Exclude the current element
-                    .mapToInt(Integer::intValue)
-                    .sum();
+//        List<Integer> numList = new ArrayList<>();
+//        for (int x = 0; x < arr.size(); x++) {
+//            int finalX = x;
+//            int sum = arr.stream()
+//                    .filter(value -> !Objects.equals(value, arr.get(finalX))) // Exclude the current element
+//                    .mapToInt(Integer::intValue)
+//                    .sum();
+//
+//            numList.add(sum);
+//        }
+//
+//        Collections.sort(numList);
+//        System.out.println("Minimum Element " + numList.get(0) + " , " + " Maximum element " + numList.get(arr.size() - 1));
 
-            numList.add(sum);
-        }
+        Collections.sort(arr);
+        int max = arr.get(arr.size() - 1);
+        int min = arr.get(0);
 
-        Collections.sort(numList);
-        System.out.println("Minimum Element " + numList.get(0) + " , " + " Maximum element " + numList.get(arr.size() - 1));
+        int sum = arr.stream().mapToInt(Integer::intValue).sum();
+        int maxSum = sum - min;
+        int minSum = sum - max;
+
+        System.out.println("Minimum Element = " + minSum + " , " + " Maximum element = " + maxSum);
     }
 
 //HackerLand University has the following grading policy:
@@ -169,20 +179,40 @@ public class Hackerank {
     public static List<Integer> gradingStudents(List<Integer> grades) {
         List<Integer> newNumList = new ArrayList<>();
         for (int gr : grades) {
-            if (gr < 38)
+            if (gr < 38) //failing grade .. no rounding occurs
                 newNumList.add(gr);
             else {
                int div = gr / 5;
-               int res = (div + 1) * 5;
-               int sub = res - gr;
+               int nextMultipleOf5 = (div + 1) * 5; // int nextMultipleOf5 = (int) (Math.ceil(gr / 5.0) * 5);
+               int sub = nextMultipleOf5 - gr;
                if (sub < 3) {
-                   newNumList.add(res);
+                   newNumList.add(nextMultipleOf5);
                } else {
                    newNumList.add(gr);
                }
             }
         }
         return newNumList;
+    }
+
+    public static List<Integer> gradingStudents2(List<Integer> grades) {
+        List<Integer> roundedGrades = new ArrayList<>();
+
+        for (int grade : grades) {
+            if (grade < 38) {
+                // No rounding for failing grades (< 38)
+                roundedGrades.add(grade);
+            } else {
+                int nextMultipleOf5 = (int) (Math.ceil(grade / 5.0) * 5);
+                if (nextMultipleOf5 - grade < 3) {
+                    roundedGrades.add(nextMultipleOf5);
+                } else {
+                    roundedGrades.add(grade);
+                }
+            }
+        }
+
+        return roundedGrades;
     }
 
     //https://www.hackerrank.com/challenges/save-the-prisoner/problem
@@ -235,6 +265,7 @@ public class Hackerank {
                map.put(pos, newList);
            }
        }
+
 
         for (Map.Entry<Integer, List<Integer>> entrySet : map.entrySet()) {
             List<Integer> value = entrySet.getValue();
@@ -369,7 +400,6 @@ public class Hackerank {
               zeroCount++;
        }
 
-
         double positiveProportion = BigDecimal.valueOf(positiveCount)
                 .divide(BigDecimal.valueOf(arr.size()), 6, RoundingMode.HALF_UP)
                 .doubleValue();
@@ -402,6 +432,7 @@ public class Hackerank {
             newTime =i + time.substring(2);
         }
 
+        System.out.println("New Time >>>>>>>>>>>>>>> " + newTime);
         return newTime;
     }
 
@@ -446,12 +477,19 @@ public class Hackerank {
 
     public static int diagonalDifference2(List<List<Integer>> arr) {
         int size = arr.size();
+        int count = 1;
         int primaryDiagonal = 0;
         int secondaryDiagonal = 0;
 
         for (int i = 0; i < size; i++) {
-            primaryDiagonal = primaryDiagonal + arr.get(i).get(i);
-            secondaryDiagonal = secondaryDiagonal + arr.get(i).get(size - i - 1);
+//            primaryDiagonal = primaryDiagonal + arr.get(i).get(i);
+//            secondaryDiagonal = secondaryDiagonal + arr.get(i).get(size - i - 1);
+
+            primaryDiagonal = primaryDiagonal + arr.get(i).get(count - 1);
+            secondaryDiagonal = secondaryDiagonal + arr.get(i).get(size - 1);
+
+            count++;
+            size--;
         }
         return Math.abs(primaryDiagonal - secondaryDiagonal);
     }
@@ -964,7 +1002,7 @@ public class Hackerank {
     private static int reverseNum (int num) {
         StringBuilder builder = new StringBuilder();
         char[] c = String.valueOf(num).toCharArray();
-        for (int x = c.length -1; x >=0; x--) {
+        for (int x = c.length -1; x >= 0; x--) {
             builder.append(c[x]);
         }
         return Integer.parseInt(builder.toString());
