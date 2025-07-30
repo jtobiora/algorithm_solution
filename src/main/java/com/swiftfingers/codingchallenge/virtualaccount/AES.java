@@ -1,8 +1,7 @@
-package com.swiftfingers.codingchallenge.docstest;
+package com.swiftfingers.codingchallenge.virtualaccount;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -11,10 +10,6 @@ import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.Base64;
 
-/**
- * Created by Obiora on 13-Jun-2025 at 10:26
- */
-@Service
 public class AES {
 
     private static final Logger logger = LoggerFactory.getLogger(AES.class);
@@ -83,22 +78,6 @@ public class AES {
                     + Character.digit(hex.charAt(i + 1), 16));
         }
         return data;
-    }
-
-    public void generatePayloadData() {
-        String aesKeyHex = "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef";
-        String jsonPayload = "{\"name\":\"Obiora\",\"amount\":5000}";
-
-        String encryptedData = AES.encrypt(jsonPayload, aesKeyHex);
-        System.out.println("Encrypted Payload Data: " + encryptedData);
-
-        String decryptedData = AES.decrypt(encryptedData, aesKeyHex);
-        System.out.println("Decrypted Payload Data: " + decryptedData);
-    }
-
-    public static void main(String[] args) {
-        AES aes = new AES();
-        aes.generatePayloadData();
     }
 
 }
