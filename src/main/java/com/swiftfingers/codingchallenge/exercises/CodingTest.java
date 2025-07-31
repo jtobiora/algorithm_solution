@@ -120,18 +120,28 @@ public class CodingTest {
     }
 
     public static void findTheLongestSubstringWithoutRepeatingChars (String str) {
-        List<String> list = new ArrayList<>();
-        for (int i = 0; i < str.length(); i++) {
-            for (int j = i + 1; j <= str.length(); j++) {
-                String sub = str.substring(i, j);
-                if(!isCharRepeat(sub)) {
-                   list.add(sub);
-                }
-            }
+        int maxLength = 0;
+        String longestSubstring = "";
+        for (int x = 0; x < str.length(); x++) {
+            Set<Character> set = new HashSet<>();
+            StringBuilder strBuilder = new StringBuilder();
+           for (int y = x; y < str.length(); y++) {
+               char ch = str.charAt(y);
+               if (set.contains(ch)) {
+                   break;
+               }
+
+               set.add(ch);
+               strBuilder.append(ch);
+           }
+
+           if (strBuilder.toString().length() > maxLength) {
+               maxLength =  strBuilder.length();
+               longestSubstring = strBuilder.toString();
+           }
         }
 
-        String s = list.stream().collect(Collectors.maxBy(Comparator.comparingInt(String::length))).get();
-        System.out.println("The longest substring is " +s);
+        System.out.println("The longest substring is " + longestSubstring);
     }
 
     public static void findTheLongestPalindromicSubstring2 (String str) {
@@ -154,18 +164,18 @@ public class CodingTest {
     }
 
     public static void findTheLongestPalindromicSubstring (String str) {
-        List<String> list = new ArrayList<>();
+        String longestSubstring = "";
              //find all the substrings
         for (int i = 0; i < str.length(); i++) {
             for (int j = i + 1; j <= str.length(); j++) {
                 String sub = str.substring(i, j);
                 if (isPalindrome(sub)) {
-                    list.add(sub);
+                   longestSubstring = sub;
                 }
             }
         }
-        String s = list.stream().max(Comparator.comparingInt(String::length)).get();
-        System.out.println(s);
+
+        System.out.println("The longest substring is " + longestSubstring);
 
     }
 
@@ -203,7 +213,7 @@ public class CodingTest {
             builder.append(c);
         }
 
-        System.out.println(builder.toString());
+        System.out.println("longest common prefix is = " +builder.toString());
     }
 
     public static void firstUniqueCharacterInString(String str) {
@@ -212,7 +222,6 @@ public class CodingTest {
         for (Character ch: str.toCharArray()) {
             map.put(ch, map.containsKey(ch) ? map.get(ch) + 1 : 1);
         }
-
 
         Character firstNonRepeatingChar = map.entrySet().stream().filter(f -> f.getValue() == 1)
                 .findFirst().get().getKey();
