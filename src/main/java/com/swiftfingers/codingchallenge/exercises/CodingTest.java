@@ -3,7 +3,6 @@ package com.swiftfingers.codingchallenge.exercises;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 public class CodingTest {
     public static void main(String[] args) {
@@ -17,7 +16,7 @@ public class CodingTest {
         anagramNumbers(371);
         isDigitSumPalindrome(96);
         kthDigit();
-        System.out.println("This is a jumping number: " +jumpingNums(96));
+        System.out.println("Largest jumping number: " + findLargestJumpingNumber(7894));
         sumOfPrimeNums();
         checkIfStringCanBeRearrangedToPalindrome("mum");
         convertStringToUppercase();
@@ -30,7 +29,7 @@ public class CodingTest {
         isPerfectNumber ();
         nthRoot();
         findLongestDistinctCharInString("geeksforgeeks");
-        kthLargestArrayElement();
+        kthLargestArrayElement(new int[] {12, 4, 7, 18, 21, 5, 8}, 4);
         findArrayLeaders();
         productArrayPuzzle();
         findMissingAndRepeatingNums();
@@ -175,7 +174,7 @@ public class CodingTest {
             }
         }
 
-        System.out.println("The longest substring is " + longestSubstring);
+        System.out.println("The longest palindromic substring is " + longestSubstring);
 
     }
 
@@ -265,8 +264,6 @@ public class CodingTest {
         }
 
         System.out.println(isPalindrome(String.valueOf(sum)));
-
-
     }
 
     //Given two numbers A and B, find the kth digit from the right of A raise to power B
@@ -274,28 +271,35 @@ public class CodingTest {
         int A = 3;
         int B = 3;
         int K = 1;
-        double  power = Math.pow(A, B);
-        String st = String.valueOf(power);
-        String modified = st.substring(0, st.lastIndexOf("."));
-        char[] c = modified.toCharArray();
-        int index = 1;
-        String numToFind = null;
-        for(int x = c.length - 1; x >= 0; x--) {
-            if (index == K) {
-                numToFind = st.charAt(x) + "";
-                break;
-            }
-            index++;
+        // Step 1: Compute A raised to the power B
+        String powerStr = String.valueOf((long)Math.pow(A, B));
+
+        // Step 2: Get the kth digit from the right
+        if (K > powerStr.length()) {
+            //return -1; // invalid if k is too large
+            System.out.println("Number is too high");
         }
 
+        // Step 3: Return the digit
+        int numToFind =  powerStr.charAt(powerStr.length() - K) - '0';
 
         System.out.println("The kth digit is " + numToFind);
     }
 
-   // Given a positive number X, find the largest jumping number which is smaller than or equal to X. A number is
+    // Given a positive number X, find the largest jumping number which is smaller than or equal to X. A number is
     //called a jumping number if all the adjacent digits in it differ by only 1. E.g 78987 is a jumping num while
     //7869 is not
-    public static boolean jumpingNums(int num) {
+    public static int findLargestJumpingNumber(int num) {
+        //start from the actual number to get the largest jumping number easily
+        for (int x = num; x > 0; x--) {
+            if (isJumpingNumber(x)) {
+                return x;
+            }
+        }
+        return 0;
+    }
+
+    public static boolean isJumpingNumber(int num) {
         String st = String.valueOf(num);
         if(st.length() == 1) return true;
         char[] ch = st.toCharArray();
@@ -303,19 +307,19 @@ public class CodingTest {
         //start the iteration from the number
         for (int x = 0; x < ch.length; x++)  {
             if (x == 0) continue;
-            char c = st.charAt(x);
-            if(Math.abs((int)startIndex - c) > 1) return false;
+            char currentChar = st.charAt(x);
+            int sub = Math.abs(startIndex - currentChar);
+            if(sub != 1) return false;
             startIndex = ch[x];
         }
 
         return true;
     }
 
-    public static boolean isPrimeNumber (int num) {
+    public static boolean isPrimeNumber(int num) {
         if (num <= 1) return false;
-        for (int i = 2; i <= num/2; i++) {
+        for (int i = 2; i <= Math.sqrt(num); i++) {
             if (num % i == 0) return false;
-            System.out.println("------------------ " + i);
         }
         return true;
     }
@@ -371,13 +375,9 @@ public class CodingTest {
     //Given a string containing only lowercase alphabets, the task is to sort it in lexicographically descending order
     public static void sortAString() {
         String str = "Hello";
-        List<Character> charList = new ArrayList<>();
-
-        for (char c : str.toCharArray()) {
-            charList.add(c);
-        }
+        List<Character> charList = str.chars().mapToObj(c -> (char) c).toList();
         Collections.sort(charList, Collections.reverseOrder());
-        System.out.println(charList);
+        System.out.println("The sorted string is given as: " +charList);
 
     }
 
@@ -398,7 +398,7 @@ public class CodingTest {
 
         if (s2.length() > s1.length()) builder.append(s2.substring(s1.length()));
 
-        System.out.println(builder.toString());
+        System.out.println("The merged string is given as: " +builder.toString());
 
     }
 
@@ -481,6 +481,26 @@ public class CodingTest {
 
     }
 
+    public static Set<Character> findUncommonCharacters(String A, String B) {
+        Set<Character> setA = new HashSet<>();
+        Set<Character> setB = new HashSet<>();
+
+        for (char c : A.toCharArray()) {
+            setA.add(c);
+        }
+        for (char c : B.toCharArray()) {
+            setB.add(c);
+        }
+
+        Set<Character> result = new HashSet<>(setA);
+        result.addAll(setB);         // result = A ∪ B
+        Set<Character> intersection = new HashSet<>(setA);
+        intersection.retainAll(setB); // intersection = A ∩ B
+        result.removeAll(intersection); // result = (A ∪ B) - (A ∩ B)
+
+        return result;
+    }
+
     //Your task is to implement the function strstr. The function takes two strings as arguments (s,x) and locates
     //the occurence of the string x in the string s. The function returns an integer denoting the first occurence of
     //the string x in s (0 based indexing). The function returns -1 if no match is found.
@@ -558,16 +578,41 @@ public class CodingTest {
         System.out.println(d);
     }
 
+//    public static void findLongestDistinctCharInString (String s) {
+//        String longest = "";
+//        for (int x = 0; x < s.length(); x++) {
+//            for (int y = x + 1; y <= s.length(); y++) {
+//                String str = s.substring(x,y);
+//                if (isUniqueCharacters(str)) {
+//                    if (str.length() > longest.length()) {
+//                        longest = str;
+//                    }
+//                }
+//            }
+//        }
+//
+//        System.out.println("The longest substring with all distinct characters is " + longest);
+//    }
+
     public static void findLongestDistinctCharInString (String s) {
         String longest = "";
+        int maxLength = 0;
         for (int x = 0; x < s.length(); x++) {
-            for (int y = x + 1; y <= s.length(); y++) {
-                String str = s.substring(x,y);
-                if (isUniqueCharacters(str)) {
-                    if (str.length() > longest.length()) {
-                        longest = str;
-                    }
+            Set<Character> seen = new HashSet<>();
+            StringBuilder builder = new StringBuilder();
+            for (int y = x; y < s.length(); y++) {
+                char ch = s.charAt(y);
+                if (seen.contains(ch)) {
+                    break;
                 }
+
+                seen.add(ch);
+                builder.append(ch);
+            }
+
+            if (builder.length() > maxLength) {
+                maxLength = builder.length();
+                longest = builder.toString();
             }
         }
 
@@ -586,19 +631,38 @@ public class CodingTest {
     }
 
     //Given an array Arr of size N, print the kth largest element in the array
-    public static void kthLargestArrayElement () {
-        int k = 3;
-        int[] array = {12, 4, 7, 18, 21, 5, 8};
-        Arrays.sort(array);
-        int count = 1;
+//    public static void kthLargestArrayElement () {
+//        int k = 3;
+//        int[] array = {12, 4, 7, 18, 21, 5, 8};
+//        Arrays.sort(array);
+//        int count = 1;
+//
+//        for (int y = array.length - 1; y >= 0; y--) {
+//            if (count == k) {
+//                System.out.println("The element is " + array[k]);
+//                break;
+//            }
+//            count++;
+//        }
+//    }
 
-        for (int y = array.length - 1; y >= 0; y--) {
-            if (count == k) {
-                System.out.println("The element is " + array[k]);
-                break;
+    //Given an array Arr of size K, print the kth largest element in the array
+    public static int kthLargestArrayElement(int[] nums, int k) {
+        //Note:: When you add elements to a PriorityQueue, they are arranged in ascending order (internally using a binary heap)
+        // Min-heap to keep track of k largest elements
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+
+        for (int num : nums) {
+            minHeap.add(num);
+
+            // Maintain only k elements in the heap
+            if (minHeap.size() > k) {
+                minHeap.poll(); // Remove the smallest
             }
-            count++;
         }
+
+        // The top of the heap is the kth largest
+        return minHeap.peek();
     }
 
     //Given an array of positive integers. Your task is to find the leaders in the array. An element is a leader
@@ -750,14 +814,12 @@ public class CodingTest {
             }
             Integer key = entry.getKey();
             if (key - prevKey > 1) {
-                System.out.println("value missing ----- " + (prevKey + 1));
+                System.out.println("Value missing ----- " + (prevKey + 1));
                 builder1.append(prevKey + 1);
                 break;
             } else {
                 prevKey = key;
             }
-
-
         }
 
     }
@@ -765,26 +827,46 @@ public class CodingTest {
 
     //You are given an array Arr of size N. You need to find all pairs in the array that sum to a number K. If no such pair
     //exists then output -1. The elements of the array are distinct and are in sorted order.
-    //Note (a,b) and (b,a) are considered same. Also an element cannot pair with itself such as (a,a)
+    //Note (a,b) and (b,a) are considered same. Also, an element cannot pair with itself such as (a,a)
     public static void countPair () {
-        int index = 1;
+//        int index = 1;
+//        int [] array = {1, 2, 3, 4, 5, 6, 7};
+//        int k = 8;
+//        Map<String, String> map = new HashMap<>();
+//        for (int i = 0; i < array.length; i++) {
+//            for (int j = i + 1; j < array.length; j++) {
+//                if (array[i] + array[j] == k) {
+//                    String ind = array[i] + "" + array[j];
+//                    if (!map.containsKey(ind)) {
+//                        map.put(ind, String.join("," ,String.valueOf(array[i]), String.valueOf(array[j])));
+//                    }
+//
+//                }
+//            }
+//        }
+
+//       map.forEach( (key,value ) -> System.out.print("Pairs " + value));
+//        System.out.println();
+
+
         int [] array = {1, 2, 3, 4, 5, 6, 7};
         int k = 8;
-        Map<String, String> map = new HashMap<>();
+        Set<String> seenChar = new HashSet<>();
         for (int i = 0; i < array.length; i++) {
             for (int j = i + 1; j < array.length; j++) {
-                if (array[i] + array[j] == k) {
-                    String ind = array[i] + "" + array[j];
-                    if (!map.containsKey(ind)) {
-                        map.put(ind, String.join("," ,String.valueOf(array[i]), String.valueOf(array[j])));
+                int outer = array[i];
+                int inner = array[j];
+                String indexes = outer + "," + inner;
+                String reversedIndex = inner + "," + outer;
+                if (outer != inner && (outer + inner == k)) {
+                    if (!seenChar.contains(indexes) || !seenChar.contains(reversedIndex)) {
+                        seenChar.add(indexes);
                     }
-
                 }
             }
         }
 
-       map.forEach( (key,value ) -> System.out.print(" Pairs " + value));
-        System.out.println();
+        System.out.println("The pair of characters are = " + seenChar);
 
     }
 
@@ -873,7 +955,7 @@ public class CodingTest {
      //Given an unsorted integer array nums, return the smallest missing positive integer.
      public static void firstMissingPositive () {
         int [] nums = {1,-1,5,4,2};
-        int prevNum = 0;
+        int currentNum = 0;
         int nextNum = 0;
         int missingNum = 0;
 
@@ -897,11 +979,11 @@ public class CodingTest {
 
 
 
-            prevNum = nums[i];
+            currentNum = nums[i];
             nextNum = nums[i + 1];
 
-            if (nextNum - prevNum > 1){
-                missingNum = prevNum + 1;
+            if (nextNum - currentNum > 1){
+                missingNum = currentNum + 1;
                 break;
             }
         }
@@ -932,24 +1014,33 @@ public class CodingTest {
         String[] strs = {"eat", "tea", "tan","ate","nat","bat"};
         Map <String, List<String> > anagramMap = new HashMap<>();
 
+        Map<String, StringBuilder> m = new HashMap<>();
         for (String st : strs) {
             char[] c = st.toCharArray();
             Arrays.sort(c);
             String sortedStr = String.valueOf(c);
 
-            if (anagramMap.containsKey(sortedStr)) {
-                List<String> list = anagramMap.get(sortedStr);
-                list.add(st);
-                anagramMap.put(sortedStr, list);
+            if (m.containsKey(sortedStr)) {
+//                List<String> list = anagramMap.get(sortedStr);
+//                list.add(st);
+//                anagramMap.put(sortedStr, list);
+                StringBuilder builder = m.get(sortedStr);
+                builder.append(",");
+                builder.append(st);
+                m.put(sortedStr, builder);
             } else {
-                List<String> newList = new ArrayList<>();
-                newList.add(st);
-                anagramMap.put(sortedStr, newList);
+//                List<String> newList = new ArrayList<>();
+//                newList.add(st);
+//                anagramMap.put(sortedStr, newList);
+
+                StringBuilder builder = new StringBuilder();
+                builder.append(st);
+                m.put(sortedStr, builder);
             }
         }
 
-        for (List<String> anagrams: anagramMap.values()) {
-            System.out.println(anagrams);
+        for (StringBuilder anagrams: m.values()) {
+            System.out.println("The sorted anagrams are = " +anagrams);
         }
      }
 
@@ -1023,13 +1114,13 @@ public class CodingTest {
             }
             prev = num[i - 1];
             next = num[i];
-            if (next - prev > 1) break;
+            if (Math.abs(next - prev) > 1) break;
 
             list.add(num[i]);
 
         }
 
-        System.out.println("The longest consecutive sequence is " +list);
+        System.out.println("The longest consecutive sequence is i" +list);
     }
 
 

@@ -22,14 +22,14 @@ public class Hackerank {
         gradingStudents(List.of(73, 67, 38, 33));
         saveThePrisoner(7, 19, 2);
         beautifulDays(20, 23, 6);
-        minimumDistances(Arrays.asList(7, 1, 3, 4, 1, 7));
+        minimumDistances(new int[]{7, 1, 3, 4, 1, 7});
         equalizeArray(Arrays.asList(3, 3, 2, 1, 3));
         consecutive1sInBinary(13);
         strangeCounter(7);
         adjacentList();
         superReducedString("aaabccddd");
         plusMinus(Arrays.asList(-4, 3, -9, 0, 4, 1));
-        timeConversion("07:01:00pm");
+        timeConversion("12:00:00am");
         matchingStrings(Arrays.asList("ab","ab","abc"), Arrays.asList("ab","abc","bc"));
         diagonalDifference();
         checkPangrams("the quick brown fox jumps over the lazy dog");
@@ -39,7 +39,7 @@ public class Hackerank {
         isStringSorted("abtsfefhs");
         gridChallenge(Arrays.asList("abc","ade", "efg"));
         balancedSums(Arrays.asList(5,6,8,11));
-        missingNumbers(Arrays.asList(203,204,205,206,207,208,203,204,205,206), Arrays.asList(203,204,204,205,206,207,205,208,203,206,205,206,204));
+        findMissingNumbers(Arrays.asList(203,204,205,206,207,208,203,204,205,206), Arrays.asList(203,204,204,205,206,207,205,208,203,206,205,206,204));
         gamingArray(Arrays.asList(5,2,6,3,4));
         superDigit("9875", 4);
         counterGame(6);
@@ -52,6 +52,7 @@ public class Hackerank {
         isValid("abcc");
         minDeletions("AAABBB");
         triplets(Arrays.asList(3,5,7), Arrays.asList(3,6), Arrays.asList(4,6,9));
+        birthdayCakeCandles(List.of(4,4,1,3));
     }
 
     /**
@@ -125,6 +126,7 @@ public class Hackerank {
         // Write your code here
         Map<Integer, Integer> sockMap = new HashMap<>();
         int pairsCounter = 0;
+        int result = 0;
         for (Integer i: ar) {
             sockMap.put(i, sockMap.containsKey(i) ? sockMap.get(i) + 1 : 1);
         }
@@ -132,7 +134,8 @@ public class Hackerank {
         for (Map.Entry<Integer, Integer> m : sockMap.entrySet()) {
             Integer value = m.getValue();
             if (value > 1) {
-                pairsCounter  += value/2;
+                result = value /2;
+                pairsCounter  += result;
             }
         }
 
@@ -145,29 +148,29 @@ public class Hackerank {
     //Given five positive integers, find the minimum and maximum values that can be calculated by summing exactly four of the
     // five integers. Then print the respective minimum and maximum values as a single line of two space-separated long integers.
     public static void miniMaxSum(List<Integer> arr) {
-//        List<Integer> numList = new ArrayList<>();
-//        for (int x = 0; x < arr.size(); x++) {
-//            int finalX = x;
-//            int sum = arr.stream()
-//                    .filter(value -> !Objects.equals(value, arr.get(finalX))) // Exclude the current element
-//                    .mapToInt(Integer::intValue)
-//                    .sum();
+        List<Integer> numList = new ArrayList<>();
+        for (int x = 0; x < arr.size(); x++) {
+            int finalX = x;
+            int sum = arr.stream()
+                    .filter(value -> !Objects.equals(value, arr.get(finalX))) // Exclude the current element
+                    .mapToInt(Integer::intValue)
+                    .sum();
+
+            numList.add(sum);
+        }
+
+        Collections.sort(numList);
+        System.out.println("Minimum Element " + numList.get(0) + " , " + " Maximum element " + numList.get(arr.size() - 1));
+
+//        Collections.sort(arr);
+//        int max = arr.get(arr.size() - 1);
+//        int min = arr.get(0);
 //
-//            numList.add(sum);
-//        }
+//        int sum = arr.stream().mapToInt(Integer::intValue).sum();
+//        int maxSum = sum - min;
+//        int minSum = sum - max;
 //
-//        Collections.sort(numList);
-//        System.out.println("Minimum Element " + numList.get(0) + " , " + " Maximum element " + numList.get(arr.size() - 1));
-
-        Collections.sort(arr);
-        int max = arr.get(arr.size() - 1);
-        int min = arr.get(0);
-
-        int sum = arr.stream().mapToInt(Integer::intValue).sum();
-        int maxSum = sum - min;
-        int minSum = sum - max;
-
-        System.out.println("Minimum Element = " + minSum + " , " + " Maximum element = " + maxSum);
+//        System.out.println("Minimum Element = " + minSum + " , " + " Maximum element = " + maxSum);
     }
 
 //HackerLand University has the following grading policy:
@@ -229,7 +232,6 @@ public class Hackerank {
             startPosition++;
         }
 
-
         return numsList.get(numsList.size() - 1);
     }
 
@@ -247,38 +249,24 @@ public class Hackerank {
                 beautifulDays.add(num);
             }
         }
-        System.out.println("Beuatiful days " + beautifulDays);
+        System.out.println("Beautiful days " + beautifulDays);
         return beautifulDays.size();
     }
 
     //https://www.hackerrank.com/challenges/minimum-distances/problem
-    public static int minimumDistances (List<Integer> numList) {
-       Map<Integer, List<Integer>> map = new HashMap<>();
-       List<Integer> count = new ArrayList<>();
-       for (int x = 0; x < numList.size(); x++) {
-           int pos = numList.get(x);
-           if (map.containsKey(pos)) {
-               map.get(pos).add(x);
-           } else {
-               List<Integer> newList = new ArrayList<>();
-               newList.add(x);
-               map.put(pos, newList);
-           }
-       }
+    public static int minimumDistances(int[] arr) {
+        Map<Integer, Integer> lastSeenIndex = new HashMap<>();
+        int minDistance = Integer.MAX_VALUE;
 
-
-        for (Map.Entry<Integer, List<Integer>> entrySet : map.entrySet()) {
-            List<Integer> value = entrySet.getValue();
-            Collections.sort(value);
-            if (value.size() > 1) {
-                int first = value.get(0);
-                int last = value.get(1);
-                int min = Math.abs(first - last);
-                count.add(min);
+        for (int i = 0; i < arr.length; i++) {
+            if (lastSeenIndex.containsKey(arr[i])) {
+                int prevIndex = lastSeenIndex.get(arr[i]);
+                minDistance = Math.min(minDistance, i - prevIndex);
             }
+            lastSeenIndex.put(arr[i], i); // update last seen index
         }
 
-        return count.stream().mapToInt(Integer::intValue).min().getAsInt();
+        return minDistance == Integer.MAX_VALUE ? -1 : minDistance;
     }
 
     //https://www.hackerrank.com/challenges/equality-in-a-array/problem
@@ -383,6 +371,27 @@ public class Hackerank {
 
         // Return "Empty String" if the result is empty, otherwise the reduced string
         return str.length() == 0 ? "Empty String" : str.toString();
+    }
+
+    //https://www.hackerrank.com/challenges/reduced-string/problem
+    public static String superReducedString2(String s) {
+        Stack<Character> stack = new Stack<>();
+
+        for (char ch : s.toCharArray()) {
+            if (!stack.isEmpty() && stack.peek() == ch) {
+                stack.pop(); // Remove the matching pair
+            } else {
+                stack.push(ch);
+            }
+        }
+
+        // Build the result from the stack
+        StringBuilder result = new StringBuilder();
+        for (char ch : stack) {
+            result.append(ch);
+        }
+
+        return result.length() == 0 ? "Empty String" : result.toString();
     }
 
     //https://www.hackerrank.com/challenges/three-month-preparation-kit-plus-minus/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=three-month-preparation-kit&playlist_slugs%5B%5D=three-month-week-one
@@ -563,39 +572,37 @@ public class Hackerank {
     }
 
     //https://www.hackerrank.com/challenges/three-month-preparation-kit-missing-numbers/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=three-month-preparation-kit&playlist_slugs%5B%5D=three-month-week-five
-    //Given two arrays of integers, find which elements in the second array are missing from the first array.
-    //If a number occurs multiple times in the lists, you must ensure that the frequency of that number in both lists is the
-    // same. If that is not the case, then it is also a missing number.
-    //Return the missing numbers sorted ascending.
-    //Only include a missing number once, even if it is missing multiple times.
-    public static List<Integer> missingNumbers(List<Integer> arr, List<Integer> brr) {
-        Collections.sort(arr);
-        Collections.sort(brr);
-        Set<Integer> missingList = new TreeSet<>();
+//    Given two arrays of integers, find which elements in the second array are missing from the first array.
+//    If a number occurs multiple times in the lists, you must ensure that the frequency of that number in both lists is the
+//     same. If that is not the case, then it is also a missing number.
+//    Return the missing numbers sorted ascending.
+//    Only include a missing number once, even if it is missing multiple times.
+    public static List<Integer> findMissingNumbers(List<Integer> arr1, List<Integer> arr2) {
+        Map<Integer, Integer> freq1 = new HashMap<>();
+        Map<Integer, Integer> freq2 = new HashMap<>();
 
-        for (Integer i : brr) {
-            //check if a number in the original list is not found in the missing list
-            if (!arr.contains(i)) {
-                missingList.add(i);
+        // Count frequency in arr1
+        for (int num : arr1) {
+            freq1.put(num, freq1.getOrDefault(num, 0) + 1);
+        }
+
+        // Count frequency in arr2
+        for (int num : arr2) {
+            freq2.put(num, freq2.getOrDefault(num, 0) + 1);
+        }
+
+        List<Integer> missing = new ArrayList<>();
+
+        for (int num : freq2.keySet()) {
+            int countInArr2 = freq2.get(num);
+            int countInArr1 = freq1.getOrDefault(num, 0);
+            if (countInArr2 > countInArr1) {
+                missing.add(num);
             }
         }
 
-       //check if the element occurs multiple times in both lists and the freq is the same
-        Map<Integer, Integer> frequencyMap1 = getFrequencyMap(arr);
-        Map<Integer, Integer> frequencyMap2 = getFrequencyMap(brr);
-
-        for (Map.Entry<Integer, Integer> entry : frequencyMap2.entrySet()) {
-            int key = entry.getKey();
-            int freq = entry.getValue();
-            if (freq > 1 && frequencyMap1.get(key) != freq) {
-                missingList.add(entry.getKey());
-            }
-        }
-
-
-        System.out.println("Missing list " + missingList);
-
-        return null;
+        Collections.sort(missing);
+        return missing;
     }
 
     public static boolean isStringSorted(String str) {
@@ -942,9 +949,10 @@ public class Hackerank {
         int deletions = 0;
 
         // Iterate through the string
-        for (int i = 0; i < s.length() - 1; i++) {
-            if (s.charAt(i) == s.charAt(i + 1)) {
-                // If two adjacent characters are the same, delete one
+        //You just need to count how many times a character is the same as the one before it — that means it's a duplicate and
+        // should be deleted. Loop through the string from the second character.
+        for (int i = 1; i < s.length(); i++) {
+            if (s.charAt(i) == s.charAt(i - 1)) {
                 deletions++;
             }
         }
@@ -1007,4 +1015,19 @@ public class Hackerank {
         }
         return Integer.parseInt(builder.toString());
     }
+
+    public static int birthdayCakeCandles(List<Integer> candles) {
+        // Write your code here
+        Map<Integer, Integer> map = new HashMap<>();
+        int max = candles.stream().mapToInt(Integer::intValue).max().getAsInt();
+        for (int num: candles) {
+            map.put(num, map.getOrDefault(num, 0) + 1);
+        }
+
+        int tallestCount = map.get(max);
+
+        System.out.println("The tallest birthday count is " + tallestCount);
+        return tallestCount;
+    }
+
 }
