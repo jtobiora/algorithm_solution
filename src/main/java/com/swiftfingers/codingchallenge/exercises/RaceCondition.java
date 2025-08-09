@@ -2,8 +2,7 @@ package com.swiftfingers.codingchallenge.exercises;
 
 import org.w3c.dom.css.Counter;
 
-import java.util.Arrays;
-import java.util.PriorityQueue;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -31,6 +30,13 @@ public class RaceCondition {
         System.out.println(queue.peek());
 
         firstMissingPositive();
+
+        Map<Integer, Integer> map = new TreeMap<>();
+        map.put(5, 10);
+        map.put(3, 20);
+        map.put(8, 20);
+        map.put(2, 15);
+
     }
 
     //Given an unsorted integer array nums, return the smallest missing positive integer.

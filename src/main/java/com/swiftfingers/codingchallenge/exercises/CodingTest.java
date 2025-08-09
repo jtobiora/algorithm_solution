@@ -376,7 +376,7 @@ public class CodingTest {
     public static void sortAString() {
         String str = "Hello";
         List<Character> charList = str.chars().mapToObj(c -> (char) c).toList();
-        Collections.sort(charList, Collections.reverseOrder());
+     //   Collections.sort(charList, Collections.reverseOrder());
         System.out.println("The sorted string is given as: " +charList);
 
     }
@@ -708,7 +708,7 @@ public class CodingTest {
             }
        }
 
-        System.out.println("The majority element is " + list);
+        System.out.println("The majority elements are " + list);
     }
 
     //Given an array nums[] of size n, construct a Product array P (of same size n) such that p[i] is equal
@@ -806,19 +806,19 @@ public class CodingTest {
             map.put(n, map.containsKey(n) ? map.get(n) + 1 : 1);
         }
 
-        int prevKey = 0;
+        int prevKey = map.keySet().iterator().next(); //first key
         for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
             Integer value = entry.getValue();
             if (value > 1) {
                 builder1.append(value);
             }
-            Integer key = entry.getKey();
-            if (key - prevKey > 1) {
+            Integer currentKey = entry.getKey();
+            if (currentKey - prevKey > 1) {
                 System.out.println("Value missing ----- " + (prevKey + 1));
                 builder1.append(prevKey + 1);
                 break;
             } else {
-                prevKey = key;
+                prevKey = currentKey;
             }
         }
 
@@ -954,7 +954,7 @@ public class CodingTest {
 
      //Given an unsorted integer array nums, return the smallest missing positive integer.
      public static void firstMissingPositive () {
-        int [] nums = {1,-1,5,4,2};
+        int [] nums = {-1, 1, 2, 3, 6, 7,9};
         int currentNum = 0;
         int nextNum = 0;
         int missingNum = 0;
@@ -990,7 +990,7 @@ public class CodingTest {
 
         System.out.println("The smallest positive missing number is " + missingNum);
 
-//         int[] num = {-1, 1, 2, 3, 5};
+//         int[] num = {-1, 1, 2, 3, 6, 7,9};
 //         int smallestElement = 0;
 //         Arrays.sort(num);
 //
@@ -1006,6 +1006,8 @@ public class CodingTest {
 //                 }
 //             }
 //         }
+
+        // System.out.println("The smallest positive missing number is === " + smallestElement);
      }
 
 

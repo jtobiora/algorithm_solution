@@ -53,6 +53,25 @@ public class Hackerank {
         minDeletions("AAABBB");
         triplets(Arrays.asList(3,5,7), Arrays.asList(3,6), Arrays.asList(4,6,9));
         birthdayCakeCandles(List.of(4,4,1,3));
+        missingNumbers(Arrays.asList(203,204,205,206,207,208,203,204,205,206), Arrays.asList(203, 204, 204, 205, 206, 207, 205, 208, 203, 206, 205, 206, 204));
+        breakingRecords(Arrays.asList(3,4,21,36,10,28,35,5,24,42));
+        birthday(Arrays.asList(1,1,1,1,1,1), 3, 2);
+        migratoryBirds(Arrays.asList(1,2,3,4,5,4,3,2,1,3,4));
+        bonAppetit(Arrays.asList(3,10,2,9),1,7);
+        climbingLeaderboard(Arrays.asList(100,100,50,40,40,20,10), Arrays.asList(5,25,50,120));
+        hurdleRace(4, Arrays.asList(1,6,3,5,2));
+        circularArrayRotation();
+        findDigits(124);
+        squares(24, 49);
+    }
+
+    public static int reverseInt(int num) {
+        boolean negative = num < 0;
+        String reversed = new StringBuilder(String.valueOf(Math.abs(num)))
+                .reverse()
+                .toString();
+        int result = Integer.parseInt(reversed);
+        return negative ? -result : result;
     }
 
     /**
@@ -1028,6 +1047,226 @@ public class Hackerank {
 
         System.out.println("The tallest birthday count is " + tallestCount);
         return tallestCount;
+    }
+
+    //Given two arrays of integers, find which elements in the second array are missing from the first array.
+    //Notes
+    //--- If a number occurs multiple times in the lists, you must ensure that the frequency of that number in both lists is the same.
+    // If that is not the case, then it is also a missing number.
+    //--- Return the missing numbers sorted ascending.
+    //--- Only include a missing number once, even if it is missing multiple times.
+    //--- The difference between the maximum and minimum numbers in the original list is less than or equal to .
+    public static List<Integer> missingNumbers(List<Integer> arr, List<Integer> brr) {
+         TreeSet<Integer> set = new TreeSet<>();
+         Map<Integer, Integer> map = new HashMap<>();
+
+        for (int element : brr) {
+            map.put(element, map.getOrDefault(element, 0) + 1);
+        }
+
+         for (Integer key : map.keySet()) {
+             if (!arr.contains(key)) {
+                 set.add(key);
+             }
+
+             Integer value = map.get(key);
+             long count = arr.stream().filter(f -> f.equals(key)).count();
+             if (value != count) {
+                 set.add(key);
+             }
+         }
+
+        System.out.println("Printing out the missing numbers " + set);
+         return null;
+    }
+
+    //https://www.hackerrank.com/challenges/breaking-best-and-worst-records/problem?isFullScreen=true
+    public static List<Integer> breakingRecords(List<Integer> scores) {
+        List<Integer> maxScoreBuilder = new ArrayList<>();
+        List<Integer> minScoreBuilder = new ArrayList<>();
+        int maxScore = scores.get(0);
+        int minScore = scores.get(0);
+
+        for (int x = 0; x < scores.size(); x++) {
+            int score = scores.get(x);
+            if (score > maxScore) {
+                maxScore = score;
+                maxScoreBuilder.add(x);
+            }
+            if (score < minScore) {
+                minScore = score;
+                minScoreBuilder.add(x);
+            }
+        }
+
+        System.out.println("Maria broke her best and worst records in " +Arrays.asList(maxScoreBuilder.size(), minScoreBuilder.size()) + " times");
+        return Arrays.asList(maxScoreBuilder.size(), minScoreBuilder.size());
+    }
+
+    //https://www.hackerrank.com/challenges/the-birthday-bar/problem?isFullScreen=true
+    public static int birthday(List<Integer> s, int d, int m) {
+        int criteriaCount =  0;
+        for (int i = 0; i < s.size(); i++) {
+            int nextCounter = i + (m -1);
+
+            if (nextCounter < s.size()) {
+                int sum = s.subList(i, nextCounter + 1).stream().reduce(0, Integer::sum);
+                if (sum == d) {
+                    criteriaCount++;
+                }
+            }
+        }
+
+        System.out.println("The criteria count is = " + criteriaCount);
+        return criteriaCount;
+    }
+
+    //https://www.hackerrank.com/challenges/migratory-birds/problem?isFullScreen=true
+    public static int migratoryBirds(List<Integer> arr) {
+        Map<Integer, Integer> map = new TreeMap<>();
+        for (int x = 0; x < arr.size(); x++) {
+            map.put(arr.get(x), map.getOrDefault(arr.get(x), 0) + 1);
+        }
+
+        int maxValue = Integer.MIN_VALUE;
+        int resultKey = -1;
+
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            int key = entry.getKey();
+            int value = entry.getValue();
+
+            if (value > maxValue) {
+                maxValue = value;
+                resultKey = key;
+            }
+        }
+        System.out.println("Key with highest value (and lowest among ties): " + resultKey);
+        return resultKey;
+    }
+
+    //https://www.hackerrank.com/challenges/bon-appetit/problem?isFullScreen=true
+    public static void bonAppetit(List<Integer> bill, int itemNotConsumed, int annaContribution) {
+
+       int leftSum = bill.subList(0, itemNotConsumed).stream().reduce(0, Integer::sum);
+       int rightSum = bill.subList(itemNotConsumed + 1, bill.size()).stream().reduce(0, Integer::sum);
+
+       long amountCharged = (leftSum + rightSum) / 2;
+       if (annaContribution == amountCharged) {
+           System.out.println("Bon Appetit");
+       } else {
+           //The actual amount to be refunded to Anna is
+           long refundAmount = annaContribution - amountCharged;
+           System.out.println("Refund amount: " + refundAmount);
+       }
+    }
+
+    //https://www.hackerrank.com/challenges/climbing-the-leaderboard/problem?isFullScreen=true
+    public static List<Integer> climbingLeaderboard(List<Integer> ranked, List<Integer> player) {
+        // Step 1: Maintain order
+        Map<Integer, List<Integer>> map = new LinkedHashMap<>();
+        for (int rank : ranked) {
+            List<Integer> list = map.getOrDefault(rank, new ArrayList<>());
+            list.add(rank);
+            map.put(rank, list);
+        }
+
+        // Convert map to a List for index access
+        List<Map.Entry<Integer, List<Integer>>> entries = new ArrayList<>(map.entrySet());
+        List<Integer> leaderboard = new ArrayList<>();
+        for (int playerScore : player) {
+            for (int i = 0; i < map.size(); i++) {
+                int value = entries.get(i).getValue().get(0); //get the first item in the list
+                if (i == 0 && playerScore > value) { //start of index
+                    leaderboard.add(i + 1);
+                    break;
+                }
+
+                if (i == map.size() - 1 && playerScore < value) {
+                    leaderboard.add(map.size() + 1);
+                    break;
+                }
+
+                if (value <= playerScore) {
+                    leaderboard.add(i + 1);
+                    break;
+                }
+            }
+        }
+
+        System.out.println("Leader scores: " + leaderboard);
+        return null;
+
+    }
+
+    //https://www.hackerrank.com/challenges/the-hurdle-race/problem?isFullScreen=true
+    public static int hurdleRace(int k, List<Integer> height) {
+        // Write your code here
+        int max = Collections.max(height);
+        if (k >= max) return 0;
+
+        if (k < max) return max - k;
+
+        return 0;
+    }
+
+    //https://www.hackerrank.com/challenges/circular-array-rotation/problem?isFullScreen=true
+    public static List<Integer> circularArrayRotation() {
+        int k = 2;
+        List<Integer> list = new ArrayList<>(Arrays.asList(3,4,5));
+        List<Integer> queries = new ArrayList<>(Arrays.asList(1, 2));
+
+        Collections.rotate(list, k);
+//        for (int i = 0; i < k; i++) {
+//            int lastNum = list.remove(list.size() - 1); // remove last element
+//            list.add(0, lastNum); // insert it at the front
+//        }
+
+        List<Integer> circularArray = new ArrayList<>();
+        for (int i = 0; i < queries.size(); i++) {
+            Integer q = queries.get(i);
+            circularArray.add(list.get(q));
+        }
+
+        System.out.println("Circular Array is given as: " + circularArray);
+        return circularArray;
+
+    }
+
+    //https://www.hackerrank.com/challenges/find-digits/problem?isFullScreen=true
+    public static int findDigits(int n) {
+        // Write your code here
+        int divisorCount = 0;
+        List<Character> list = String.valueOf(n).chars().mapToObj(c ->(char)c).toList();
+
+        for (Character character : list) {
+            int num = character - '0';
+            if (num == 0) continue;
+            if (n % num == 0) {
+                divisorCount++;
+            }
+        }
+
+        System.out.println("The number of divisors occurring within the integer list is: " + divisorCount);
+        return divisorCount;
+    }
+
+    //https://www.hackerrank.com/challenges/sherlock-and-squares/problem?isFullScreen=true
+    public static int squares(int a, int b) {
+//        for (int i = a; i <= b; i++) {
+//            int sqrt = (int) Math.sqrt(i);
+//            if (sqrt * sqrt == i) {
+//                System.out.println(i + " is a perfect square (" + sqrt + "²)");
+//            }
+//        }
+
+        int sqrtStart = (int) Math.ceil(Math.sqrt(24));
+        int sqrtEnd = (int) Math.floor(Math.sqrt(49));
+
+        for (int i = sqrtStart; i <= sqrtEnd; i++) {
+            System.out.println(i * i);
+        }
+
+        return 0;
     }
 
 }
